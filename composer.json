@@ -1,0 +1,64 @@
+{
+  "name": "novactive/ezformbuildermigrationbundle",
+  "type": "ezplatform-bundle",
+  "description": "Bundle to ease the migration from ezstudio-form-builder forms to ezplatform-form-builder forms",
+  "keywords": [
+    "novactive",
+    "ezplatform",
+    "form-builder",
+    "migration"
+  ],
+  "license": [
+    "MIT"
+  ],
+  "authors": [
+    {
+      "name": "Novactive",
+      "homepage": "http://www.novactive.com",
+      "email": "dir.tech@novactive.com"
+    }
+  ],
+  "require": {
+    "php": "^7.2",
+    "ezsystems/ezpublish-kernel": "^7.4.0",
+    "symfony/symfony": "^3.4.0"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^2.10",
+    "phpmd/phpmd": "^2.6",
+    "phpstan/phpstan": "^0.11.5",
+    "phpstan/phpstan-doctrine": "^0.11.2",
+    "phpstan/phpstan-symfony": "^0.11.5",
+    "roave/security-advisories": "dev-master",
+    "sebastian/phpcpd": "^4.0",
+    "squizlabs/php_codesniffer": "^3.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Novactive\\Bundle\\EzFormBuilderMigrationBundle\\": "src/bundle",
+      "Novactive\\EzFormBuilderMigration\\": "src/lib"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "scripts": {
+    "fix-cs": [
+      "./vendor/bin/php-cs-fixer fix --config=.cs/.php_cs.php",
+      "./vendor/bin/phpmd src text .cs/md_ruleset.xml",
+      "./vendor/bin/phpcpd src",
+      "./vendor/bin/phpcbf -n src --standard=.cs/cs_ruleset.xml",
+      "./vendor/bin/phpcs --standard=.cs/cs_ruleset.xml --extensions=php src"
+    ],
+    "clean": [
+      "rm -f .php_cs.cache",
+      "rm -rf vendor",
+      "rm -f composer.lock"
+    ],
+    "tests": [
+      "./vendor/bin/phpcs --standard=.cs/cs_ruleset.xml --extensions=php src",
+      "./vendor/bin/phpmd src text .cs/md_ruleset.xml",
+      "./vendor/bin/phpcpd src"
+    ]
+  }
+}
