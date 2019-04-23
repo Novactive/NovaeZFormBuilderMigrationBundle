@@ -23,7 +23,7 @@ class RegexValidator extends DefaultValidator
         $validator = parent::convert($ezStudioValidator);
         if ($validator && false !== $value = json_encode(
             [
-                    'select'  => "\/.*\/",
+                    'select'  => "/.*/",
                     'pattern' => $ezStudioValidator->getValue(),
                 ]
         )) {
