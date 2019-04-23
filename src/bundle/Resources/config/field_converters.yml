@@ -1,0 +1,84 @@
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        # automatically injects dependencies in your services
+        autowire: true
+        # automatically registers your services as commands, event subscribers, etc.
+        autoconfigure: true
+        # this means you cannot fetch services directly from the container via $container->get()
+        # if you need to do this, you can override this setting on individual services
+        public: false
+
+    Novactive\EzFormBuilderMigration\Converter\EzStudioForm\FieldConverter:
+        arguments:
+            $converters: !tagged nova.ezformbuildermigration.converter.field
+
+    nova.ezformbuildermigration.converter.field.singleLineText:
+        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Field\SingleLineField
+        arguments:
+            $ezStudioType: singleLineText
+            $ezPlatformType: single_line
+        tags: ["nova.ezformbuildermigration.converter.field"]
+
+    nova.ezformbuildermigration.converter.field.paragraphText:
+        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Field\MultiLineField
+        arguments:
+            $ezStudioType: paragraphText
+            $ezPlatformType: multi_line
+        tags: ["nova.ezformbuildermigration.converter.field"]
+
+    nova.ezformbuildermigration.converter.field.email:
+        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Field\DefaultField
+        arguments:
+            $ezStudioType: email
+            $ezPlatformType: email
+        tags: ["nova.ezformbuildermigration.converter.field"]
+
+    nova.ezformbuildermigration.converter.field.url:
+        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Field\UrlField
+        arguments:
+            $ezStudioType: url
+            $ezPlatformType: url
+        tags: ["nova.ezformbuildermigration.converter.field"]
+
+    nova.ezformbuildermigration.converter.field.date:
+        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Field\DateField
+        arguments:
+            $ezStudioType: date
+            $ezPlatformType: date
+        tags: ["nova.ezformbuildermigration.converter.field"]
+
+    nova.ezformbuildermigration.converter.field.checkbox:
+        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Field\ChoicesField
+        arguments:
+            $ezStudioType: checkbox
+            $ezPlatformType: checkbox_list
+        tags: ["nova.ezformbuildermigration.converter.field"]
+
+    nova.ezformbuildermigration.converter.field.radio:
+        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Field\ChoicesField
+        arguments:
+            $ezStudioType: radio
+            $ezPlatformType: radio
+        tags: ["nova.ezformbuildermigration.converter.field"]
+
+    nova.ezformbuildermigration.converter.field.dropdown:
+        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Field\ChoicesField
+        arguments:
+            $ezStudioType: dropdown
+            $ezPlatformType: dropdown
+        tags: ["nova.ezformbuildermigration.converter.field"]
+
+    nova.ezformbuildermigration.converter.field.captcha:
+        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Field\DefaultField
+        arguments:
+            $ezStudioType: captcha
+            $ezPlatformType: captcha
+        tags: ["nova.ezformbuildermigration.converter.field"]
+
+    nova.ezformbuildermigration.converter.field.file:
+        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Field\DefaultField
+        arguments:
+            $ezStudioType: file
+            $ezPlatformType: file
+        tags: ["nova.ezformbuildermigration.converter.field"]

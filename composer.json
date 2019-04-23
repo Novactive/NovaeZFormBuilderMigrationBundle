@@ -2,6 +2,9 @@
   "name": "novactive/ezformbuildermigrationbundle",
   "type": "ezplatform-bundle",
   "description": "Bundle to ease the migration from ezstudio-form-builder forms to ezplatform-form-builder forms",
+  "repositories": [
+    { "type": "composer", "url": "https://updates.ez.no/ttl" }
+  ],
   "keywords": [
     "novactive",
     "ezplatform",
@@ -19,15 +22,20 @@
     }
   ],
   "require": {
+    "doctrine/doctrine-bundle": "^1.6.0",
     "php": "^7.2",
+    "ext-intl": "*",
+    "ext-json": "*",
+    "ezsystems/ezplatform-form-builder": "^1.0.0",
+    "ezsystems/ezplatform-page-migration": "^1.0.0",
     "ezsystems/ezpublish-kernel": "^7.4.0",
+    "jms/serializer": "^1.0",
     "symfony/symfony": "^3.4.0"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^2.10",
     "phpmd/phpmd": "^2.6",
     "phpstan/phpstan": "^0.11.5",
-    "phpstan/phpstan-doctrine": "^0.11.2",
     "phpstan/phpstan-symfony": "^0.11.5",
     "roave/security-advisories": "dev-master",
     "sebastian/phpcpd": "^4.0",

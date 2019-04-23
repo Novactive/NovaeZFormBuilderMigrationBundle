@@ -1,0 +1,14 @@
+blocks:
+    formbuilder:
+        name: Form
+        visible: false
+        thumbnail: ""
+        attributes:
+            formId:
+                type: integer
+                name: Form ID
+                validators:
+                    regexp:
+                        options:
+                            pattern: '/[0-9]+/'
+                        message: 'Invalid ID'

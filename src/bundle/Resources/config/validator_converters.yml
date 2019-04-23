@@ -1,0 +1,90 @@
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        # automatically injects dependencies in your services
+        autowire: true
+        # automatically registers your services as commands, event subscribers, etc.
+        autoconfigure: true
+        # this means you cannot fetch services directly from the container via $container->get()
+        # if you need to do this, you can override this setting on individual services
+        public: false
+
+    Novactive\EzFormBuilderMigration\Converter\EzStudioForm\ValidatorConverter:
+        arguments:
+            $converters: !tagged nova.ezformbuildermigration.converter.validator
+
+    nova.ezformbuildermigration.converter.validator.minLength:
+        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Validator\DefaultValidator
+        arguments:
+            $ezStudioType: minLength
+            $ezPlatformType: min_length
+        tags: ["nova.ezformbuildermigration.converter.validator"]
+
+    nova.ezformbuildermigration.converter.validator.maxLength:
+        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Validator\DefaultValidator
+        arguments:
+            $ezStudioType: maxLength
+            $ezPlatformType: max_length
+        tags: ["nova.ezformbuildermigration.converter.validator"]
+
+    nova.ezformbuildermigration.converter.validator.regexp:
+        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Validator\RegexValidator
+        arguments:
+            $ezStudioType: regexp
+            $ezPlatformType: regex
+        tags: ["nova.ezformbuildermigration.converter.validator"]
+
+    nova.ezformbuildermigration.converter.validator.required:
+        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Validator\DefaultValidator
+        arguments:
+            $ezStudioType: required
+            $ezPlatformType: required
+        tags: ["nova.ezformbuildermigration.converter.validator"]
+
+    # disabled as not tested yet
+    #    nova.ezformbuildermigration.converter.validator.filesize:
+    #        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Validator\FileSizeValidator
+    #        arguments:
+    #            $ezStudioType: filesize
+    #            $ezPlatformType: upload_size
+    #        tags: ["nova.ezformbuildermigration.converter.validator"]
+    #
+    #    nova.ezformbuildermigration.converter.validator.fileext:
+    #        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Validator\DefaultValidator
+    #        arguments:
+    #            $ezStudioType: fileext
+    #            $ezPlatformType: extensions
+    #        tags:
+    #        - {name: nova.ezformbuildermigration.converter.validator}
+
+    nova.ezformbuildermigration.converter.validator.min_selections:
+        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Validator\DefaultValidator
+        arguments:
+            $ezStudioType: min_selections
+            $ezPlatformType: min_choices
+        tags: ["nova.ezformbuildermigration.converter.validator"]
+
+    nova.ezformbuildermigration.converter.validator.max_selections:
+        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Validator\DefaultValidator
+        arguments:
+            $ezStudioType: max_selections
+            $ezPlatformType: max_choices
+        tags: ["nova.ezformbuildermigration.converter.validator"]
+
+    nova.ezformbuildermigration.converter.validator.choices:
+        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Validator\NullValidator
+        arguments:
+            $ezStudioType: choices
+        tags: ["nova.ezformbuildermigration.converter.validator"]
+
+    nova.ezformbuildermigration.converter.validator.format:
+        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Validator\NullValidator
+        arguments:
+            $ezStudioType: format
+        tags: ["nova.ezformbuildermigration.converter.validator"]
+
+    nova.ezformbuildermigration.converter.validator.captcha:
+        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Validator\NullValidator
+        arguments:
+            $ezStudioType: captcha
+        tags: ["nova.ezformbuildermigration.converter.validator"]
