@@ -89,11 +89,9 @@ class EzStudioFormPersistenceHandler
         $query->select('*')
             ->from('ezformbuilder_form')
             ->where(
-                $query->expr()->eq('id', ':id'),
-                $query->expr()->neq('status', ':status')
+                $query->expr()->eq('id', ':id')
             )
-            ->setParameter(':id', $formId, ParameterType::INTEGER)
-            ->setParameter(':status', Form::STATUS_ARCHIVED, ParameterType::INTEGER);
+            ->setParameter(':id', $formId, ParameterType::INTEGER);
         $query->setMaxResults(1);
         $statement = $query->execute();
         $form      = $statement instanceof Statement ? $statement->fetch(FetchMode::ASSOCIATIVE) : null;

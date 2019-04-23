@@ -15,6 +15,7 @@ namespace Novactive\Bundle\EzFormBuilderMigrationBundle\Command;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Statement;
+use Doctrine\DBAL\ParameterType;
 use eZ\Publish\Core\Base\Exceptions\NotFoundException;
 use eZ\Publish\Core\Repository\Repository;
 use Novactive\EzFormBuilderMigration\Repository\FormContentService;
@@ -144,9 +145,11 @@ EOF
                 'f',
                 'ezcontentobject_attribute',
                 'a',
-                $query->expr()->like('a.data_text', 'CONCAT("%", fr.block_id, "%")')
+                $query->expr()->andX(
+                    $query->expr()->eq('a.data_type_string', '"ezlandingpage"'),
+                    $query->expr()->like('a.data_text', 'CONCAT("%", fr.block_id, "%")')
+                )
             )
-            ->where($query->expr()->eq('a.data_type_string', '"ezlandingpage"'))
             ->groupBy('f.id, a.language_code');
 
         $statement = $query->execute();
@@ -168,11 +171,13 @@ EOF
                     'languages' => [],
                 ];
 
-            $forms[$formId]['languages'][] = $result['language_code'] ?? null;
+            if (null !== $result['language_code']) {
+                $forms[$formId]['languages'][] = $result['language_code'];
+            }
         }
         $io->warning('You are about to run data migration process for eZStudio Forms. This operation cannot be reverted.');
 
-        $question = sprintf('Found %d formbuilder block items. Do you want to continue?', count($forms));
+        $question = sprintf('Found %d formbuilder form items. Do you want to continue?', count($forms));
         if (!$io->confirm($question, false)) {
             return null;
         }
@@ -195,6 +200,49 @@ EOF
                 $progressBar->advance();
             }
         });
+        $progressBar->finish();
+        $io->newLine();
+
+        $query    = $this->connection->createQueryBuilder();
+        $query->select('a.id as attributeId, a.name, a.value as formId, b.id blockId, b.type')
+            ->from('ezpage_blocks', 'b')
+            ->innerJoin('b', 'ezpage_map_attributes_blocks', 'ba', $query->expr()->eq('ba.block_id', 'b.id'))
+            ->innerJoin('b', 'ezpage_attributes', 'a', $query->expr()->eq('a.id', 'ba.attribute_id'))
+            ->where(
+                $query->expr()->eq('b.type', ':blockType'),
+                $query->expr()->eq('a.name', ':attributeName')
+            )
+        ->setParameter(':blockType', 'formbuilder', ParameterType::STRING)
+        ->setParameter(':attributeName', 'formId', ParameterType::STRING);
+
+        $statement = $query->execute();
+        $blocks    = $statement instanceof Statement ? $statement->fetchAll() : [];
+
+        $io->writeln(sprintf('Found %d formbuilder block items. ', count($blocks)));
+        $progressBar = new ProgressBar($output, count($blocks));
+        foreach ($blocks as $block) {
+            $content = $this->formContentService->loadContent((int)$block['formId']);
+
+            $updateAttributQuery = $this->connection->createQueryBuilder();
+            $updateAttributQuery->update('ezpage_attributes')
+                ->set('name', ':attributeName')
+                ->set('value', ':attributeValue')
+                ->where('id', ':attributeId')
+                ->setParameter(':attributeName', 'contentId', ParameterType::STRING)
+                ->setParameter(':attributeValue', $content->id, ParameterType::INTEGER)
+                ->setParameter(':attributeId', $block['attributeId'], ParameterType::INTEGER);
+            $updateAttributQuery->execute();
+
+            $updateBlockQuery = $this->connection->createQueryBuilder();
+            $updateBlockQuery->update('ezpage_blocks')
+                ->set('type', ':blockType')
+                ->where('id', ':blockId')
+                ->setParameter(':blockType', 'form', ParameterType::STRING)
+                ->setParameter(':blockId', $block['blockId'], ParameterType::INTEGER);
+            $updateBlockQuery->execute();
+
+            $progressBar->advance();
+        }
         $progressBar->finish();
         $io->newLine();
 

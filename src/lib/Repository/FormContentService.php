@@ -159,6 +159,10 @@ class FormContentService
      */
     protected function getContentCreateStructure(EzStudioForm $ezStudioForm, array $languages): ContentCreateStruct
     {
+        if (empty($languages)) {
+            $saLanguages = $this->configResolver->getParameter('languages');
+            $languages   =[reset($saLanguages)];
+        }
         $contentType      = $this->getContentType();
         $mainLanguageCode = reset($languages);
 
