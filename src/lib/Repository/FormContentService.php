@@ -61,6 +61,11 @@ class FormContentService
      */
     public function __construct(array $options)
     {
+        $this->setOptions($options);
+    }
+
+    public function setOptions(array $options)
+    {
         $resolver = new OptionsResolver();
         $this->configureOptions($resolver);
         $this->options = $resolver->resolve($options);

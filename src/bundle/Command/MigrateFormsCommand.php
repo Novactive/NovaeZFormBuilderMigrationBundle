@@ -66,15 +66,61 @@ class MigrateFormsCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('form_builder_migration:migrate_forms_command')
+            ->setName('form_builder_migration:migrate')
             // phpcs:disable
-            ->setDescription('Convert ezstudio form builder forms into ezplatform form builder form (submissions aren\'t converted yet')
+            ->setDescription(<<<'EOF'
+            
+<info>%command.name%</info> runs a migration process for eZStudio Form builder forms created in previous versions of eZ Platform. 
+
+<warning>During the script execution the database should not be modified.
+
+To avoid surprises you are advised to create a backup or execute a dry run:
+ 
+    %command.name% --dry-run
+    
+before proceeding with the actual update.</warning>
+
+Since this script can potentially run for a very long time, to avoid memory
+exhaustion, run it in production environment using the <info>--env=prod</info> switch.
+
+If you configuration uses multiple repositories, 
+you have to run the comand multiple times 
+with different siteaccesses using <info>--siteaccess</info> switch.
+
+EOF
+            )
+            ->addOption(
+                'content_type_identifier',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Identifier for the content type to use for creating content',
+                'form'
+            )
+            ->addOption(
+                'field_identifier',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Identifier for the content type field to use for storing the forms',
+                'form'
+            )
             ->addOption(
                 'dry-run',
                 null,
                 InputOption::VALUE_NONE,
                 'When specified, changes are _NOT_ persisted to database.'
             );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        parent::initialize($input, $output);
+        $this->formContentService->setOptions([
+            'content_type_identifier' => $input->getOption('content_type_identifier'),
+            'field_identifier'        => $input->getOption('field_identifier'),
+        ]);
     }
 
     /**
@@ -124,6 +170,7 @@ class MigrateFormsCommand extends Command
 
             $forms[$formId]['languages'][] = $result['language_code'] ?? null;
         }
+        $io->warning('You are about to run data migration process for eZStudio Forms. This operation cannot be reverted.');
 
         $question = sprintf('Found %d formbuilder block items. Do you want to continue?', count($forms));
         if (!$io->confirm($question, false)) {
