@@ -3,6 +3,10 @@ blocks:
         name: Form
         visible: false
         thumbnail: ""
+        views:
+            basic:
+                template: "@EzFormBuilderMigration/landing_page/blocks/formbuilder.html.twig"
+                name: Form Block view
         attributes:
             formId:
                 type: integer

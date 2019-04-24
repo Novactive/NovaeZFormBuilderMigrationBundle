@@ -182,9 +182,7 @@ EOF
             return null;
         }
 
-        if (!$isDryRun) {
-            $this->connection->beginTransaction();
-        }
+        $this->connection->beginTransaction();
 
         $progressBar = new ProgressBar($output, count($forms));
         $this->repository->sudo(function () use ($progressBar, $forms) {
@@ -192,9 +190,9 @@ EOF
                 $ezStudioFormId = (int) $form['id'];
 
                 try {
-                    $this->formContentService->loadContent($ezStudioFormId);
+                    $content = $this->formContentService->loadContent($ezStudioFormId);
                 } catch (NotFoundException $exception) {
-                    $this->formContentService->createContent($ezStudioFormId, $form['languages']);
+                    $content = $this->formContentService->createContent($ezStudioFormId, $form['languages']);
                 }
 
                 $progressBar->advance();
@@ -202,6 +200,11 @@ EOF
         });
         $progressBar->finish();
         $io->newLine();
+
+        if (!$isDryRun) {
+            $this->connection->commit();
+            $this->connection->beginTransaction();
+        }
 
         $query    = $this->connection->createQueryBuilder();
         $query->select('a.id as attributeId, a.name, a.value as formId, b.id blockId, b.type')
@@ -227,7 +230,7 @@ EOF
             $updateAttributQuery->update('ezpage_attributes')
                 ->set('name', ':attributeName')
                 ->set('value', ':attributeValue')
-                ->where('id', ':attributeId')
+                ->where($updateAttributQuery->expr()->eq('id', ':attributeId'))
                 ->setParameter(':attributeName', 'contentId', ParameterType::STRING)
                 ->setParameter(':attributeValue', $content->id, ParameterType::INTEGER)
                 ->setParameter(':attributeId', $block['attributeId'], ParameterType::INTEGER);
@@ -236,8 +239,10 @@ EOF
             $updateBlockQuery = $this->connection->createQueryBuilder();
             $updateBlockQuery->update('ezpage_blocks')
                 ->set('type', ':blockType')
-                ->where('id', ':blockId')
+                ->set('view', ':blockView')
+                ->where($updateBlockQuery->expr()->eq('id', ':blockId'))
                 ->setParameter(':blockType', 'form', ParameterType::STRING)
+                ->setParameter(':blockView', 'default', ParameterType::STRING)
                 ->setParameter(':blockId', $block['blockId'], ParameterType::INTEGER);
             $updateBlockQuery->execute();
 
