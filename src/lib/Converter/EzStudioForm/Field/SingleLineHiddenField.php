@@ -15,56 +15,23 @@ namespace Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Field;
 
 use EzSystems\EzPlatformFormBuilder\FieldType\Model\Attribute;
 use EzSystems\EzPlatformFormBuilder\FieldType\Model\Field;
-use Novactive\EzFormBuilderMigration\Converter\EzStudioForm\FieldConverterInterface;
 use Novactive\EzFormBuilderMigration\GuidGenerator;
 use Novactive\EzFormBuilderMigration\Model\Field as EzStudioField;
 
-class DefaultField implements FieldConverterInterface
+class SingleLineHiddenField extends DefaultField
 {
-    /**
-     * Field type in eZStudio form builder.
-     *
-     * @var string
-     */
-    protected $ezStudioType;
-
-    /**
-     * Field type in eZPlatform form builder.
-     *
-     * @var string
-     */
-    protected $ezPlatformType;
-
-    /**
-     * DefaultField constructor.
-     */
-    public function __construct(string $ezStudioType, string $ezPlatformType)
-    {
-        $this->ezStudioType   = $ezStudioType;
-        $this->ezPlatformType = $ezPlatformType;
-    }
-
-    public function support(string $type): bool
-    {
-        return $type === $this->ezStudioType;
-    }
-
     public function convert(EzStudioField $ezStudioField): Field
     {
-        $options = $ezStudioField->getOptions();
+        $options    = $ezStudioField->getOptions();
         $attributes = [
-            new Attribute(
-                'placeholder',
-                $ezStudioField->getPlaceholderText()
-            ),
-            new Attribute(
-                'help',
-                $ezStudioField->getHelpText()
-            ),
             new Attribute(
                 'inputname',
                 isset($options['inputname']) ? $options['inputname']->getValue() : null
             ),
+            new Attribute(
+                'value',
+                isset($options['inputvalue']) ? $options['inputvalue']->getValue() : null
+            )
         ];
 
         return new Field(

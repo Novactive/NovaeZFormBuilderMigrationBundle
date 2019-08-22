@@ -13,6 +13,13 @@ services:
         arguments:
             $converters: !tagged nova.ezformbuildermigration.converter.field
 
+    nova.ezformbuildermigration.converter.field.singleLineHiddenText:
+        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Field\SingleLineHiddenField
+        arguments:
+            $ezStudioType: singleLineTextHidden
+            $ezPlatformType: hidden
+        tags: ["nova.ezformbuildermigration.converter.field"]
+
     nova.ezformbuildermigration.converter.field.singleLineText:
         class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Field\SingleLineField
         arguments:

@@ -18,9 +18,6 @@ use eZ\Publish\API\Repository\Values\User\User;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
- * Class Version.
- *
- * @package Novactive\EzFormBuilderMigration\Model
  * @Serializer\ExclusionPolicy("all")
  * @Serializer\AccessType("public_method")
  */

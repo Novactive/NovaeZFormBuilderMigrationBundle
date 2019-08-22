@@ -23,10 +23,12 @@ class MultiLineField extends DefaultField
     {
         $field = parent::convert($ezStudioField);
 
+        $options      = $ezStudioField->getOptions();
         $attributes   = $field->getAttributes();
         $attributes[] = new Attribute(
             'default_value',
-            null
+            isset($options['inputvalue']) ? $options['inputvalue']->getValue() : null
+
         );
         $field->setAttributes($attributes);
 

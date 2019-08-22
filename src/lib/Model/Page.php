@@ -16,9 +16,6 @@ namespace Novactive\EzFormBuilderMigration\Model;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
- * Class Page.
- *
- * @package Novactive\EzFormBuilderMigration\Model
  * @Serializer\ExclusionPolicy("all")
  * @Serializer\AccessType("public_method")
  */
