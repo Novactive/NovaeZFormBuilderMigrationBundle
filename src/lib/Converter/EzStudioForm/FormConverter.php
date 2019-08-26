@@ -53,9 +53,11 @@ class FormConverter
             'message'     => $eZStudioForm->getThankyouText(),
         ];
 
-        if (EzStudioForm::REDIRECT_URL === $eZStudioForm->getRedirectType()) {
+        if ($submitOptions['location_id'] !== '') {
             $submitOptions['action'] = 'location_id';
-        } elseif (EzStudioForm::REDIRECT_CONTENT === $eZStudioForm->getRedirectType()) {
+        }
+        if ($submitOptions['url'] !== '') {
+            $submitOptions['location_id'] = '';
             $submitOptions['action'] = 'url';
         }
 
