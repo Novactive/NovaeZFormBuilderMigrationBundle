@@ -51,7 +51,6 @@ class FormContentService
     /**
      * FormContentService constructor.
      *
-     *
      * @throws AccessException
      * @throws InvalidOptionsException
      * @throws MissingOptionsException

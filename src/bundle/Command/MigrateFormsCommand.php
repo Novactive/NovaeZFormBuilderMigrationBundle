@@ -184,6 +184,7 @@ EOF
 
         $this->connection->beginTransaction();
 
+        $io->writeln(sprintf('Found %d forms. ', count($forms)));
         $progressBar = new ProgressBar($output, count($forms));
         $this->repository->sudo(function () use ($progressBar, $forms) {
             foreach ($forms as $form) {

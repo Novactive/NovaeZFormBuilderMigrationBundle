@@ -29,7 +29,7 @@ class EzFormBuilderMigrationExtension extends Extension implements PrependExtens
     protected $configDirPath = __DIR__.'/../Resources/config';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function load(array $configs, ContainerBuilder $container)
     {

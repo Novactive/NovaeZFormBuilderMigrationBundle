@@ -42,20 +42,20 @@ services:
         tags: ["nova.ezformbuildermigration.converter.validator"]
 
     # disabled as not tested yet
-    #    nova.ezformbuildermigration.converter.validator.filesize:
-    #        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Validator\FileSizeValidator
-    #        arguments:
-    #            $ezStudioType: filesize
-    #            $ezPlatformType: upload_size
-    #        tags: ["nova.ezformbuildermigration.converter.validator"]
-    #
-    #    nova.ezformbuildermigration.converter.validator.fileext:
-    #        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Validator\DefaultValidator
-    #        arguments:
-    #            $ezStudioType: fileext
-    #            $ezPlatformType: extensions
-    #        tags:
-    #        - {name: nova.ezformbuildermigration.converter.validator}
+    nova.ezformbuildermigration.converter.validator.filesize:
+        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Validator\FileSizeValidator
+        arguments:
+            $ezStudioType: filesize
+            $ezPlatformType: upload_size
+        tags: ["nova.ezformbuildermigration.converter.validator"]
+
+    nova.ezformbuildermigration.converter.validator.fileext:
+        class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Validator\FileExtValidator
+        arguments:
+            $ezStudioType: fileext
+            $ezPlatformType: extensions
+        tags:
+        - {name: nova.ezformbuildermigration.converter.validator}
 
     nova.ezformbuildermigration.converter.validator.min_selections:
         class: Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Validator\DefaultValidator

@@ -16,29 +16,15 @@ namespace Novactive\EzFormBuilderMigration\Converter\EzStudioForm\Validator;
 use EzSystems\EzPlatformFormBuilder\FieldType\Model\Validator;
 use Novactive\EzFormBuilderMigration\Model\Validator as EzStudioValidator;
 
-class FileSizeValidator extends DefaultValidator
+class FileExtValidator extends DefaultValidator
 {
     public function convert(EzStudioValidator $ezStudioValidator): ?Validator
     {
-        $sizeString = $ezStudioValidator->getValue();
-
-        $units = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-        $size  = null;
-        foreach ($units as $unit) {
-            $regex = sprintf("/([\d]+)\s*?%s/mi", $unit);
-
-            if (preg_match($regex, $sizeString, $matches)) {
-                $size = $matches[1];
-            }
-        }
-
-        if (!$size) {
-            return null;
-        }
+        $value = $ezStudioValidator->getValue();
 
         return new Validator(
             $this->ezPlatformType,
-            $size
+            '*' !== $value ? $value : ''
         );
     }
 }
